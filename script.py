@@ -5,7 +5,6 @@ N = 100000
 f = open("generate.txt", "w")
 
 for i in range(N):
-    v = str(random.uniform(0, 1))
-    v = v[0:6]
+    v = str(random.randint(-999999, 999999))
     f.write(v+"\n")
 f.close()
