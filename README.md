@@ -1,3 +1,3 @@
 # NVIDIA Hackathon Statements
 
-## Guidelines for File Names:
+`!nvcc -o a.out parallel.cu -run`

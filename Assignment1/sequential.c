@@ -21,13 +21,17 @@ int main()
     }
     fclose(filePointer);
 
-    filePointer = fopen("output.txt", "w");
+    filePointer = fopen("output-s.txt", "w");
     double sum=0;
     for(int i=0; i<sizeof(arr)/sizeof(arr[0]); i++)
     {
         sum += arr[i];
-      printf("%0.4lf\n", sum);
-        fprintf(filePointer, "%0.4lf\n", sum);
+        arr[i] = sum;
+        
+    }
+    for(int i=0; i<sizeof(arr)/sizeof(arr[0]); i++)
+    {
+        fprintf(filePointer, "%0.4lf\n", arr[i]);
     }
     fclose(filePointer);
 }
