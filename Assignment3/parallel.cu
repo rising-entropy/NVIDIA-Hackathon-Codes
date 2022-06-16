@@ -14,6 +14,14 @@
 //     return res;
 // }
 
+__global__ void computeConvolutionValue(int mRows, int mCols, int mWidth, int convRows, int convCols, int *m, int *c, int *output, int outputCols, int outputRows){
+    int rowIndex=threadIdx.x, colIndex=blockIdx.x;
+    int res = 0;
+    
+    int indexToFillInValue = rowIndex + (outputRows*colIndex);
+    output[indexToFillInValue] = 56;
+}
+
 int main(){
     FILE *filePointer;
     char line[100] = {0};
@@ -37,35 +45,6 @@ int main(){
     cudaMallocManaged(&output, sizeof(int)*outputRows*outputCols);
     
     int m_input[mRows][mCols][mWidth], c_input[convRows][convCols][mWidth];
-
-    // culprit
-//     for(int i=0; i<mWidth; i++){
-//         for(int j=0; j<mCols; j++){
-//             for(int k=0; k<mRows; k++){
-//                 while(!feof(filePointer)){
-//                     int theIndexToPutIn;
-//                     theIndexToPutIn = (i*(mRows)*(mCols)) + (j*(mRows)) + k;
-//                     fscanf(filePointer, "%d", &m[theIndexToPutIn]);
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-    
-    
-     // culprit
-//     for(int i=0; i<mWidth; i++){
-//         for(int j=0; j<convCols; j++){
-//             for(int k=0; k<convRows; k++){
-//                 while(!feof(filePointer)){
-//                     int theIndexToPutIn;
-//                     theIndexToPutIn = (i*(convRows)*(convCols)) + (j*(convRows)) + k;
-//                     fscanf(filePointer, "%d", &c[theIndexToPutIn]);
-//                     break;
-//                 }
-//             }
-//         }
-//     }
     
     for(int i=0; i<mWidth; i++){
         for(int j=0; j<mCols; j++){
@@ -130,47 +109,20 @@ int main(){
         m2[x][y][z] = m[i];
     }
     
-//     for(int i=0; i<mWidth*mCols*mRows; i++){
-//         int id = i;
-//         int z = id / ((mCols)*(mRows));
-//         id -= (z * (mCols)*(mRows));
-//         int y = id / (mRows);
-//         int x = id % (mRows);
-//         m2[x][y][z] = m[id];
-//     }
+    computeConvolutionValue<<<outputCols, outputRows>>>(mRows, mCols, mWidth, convRows, convCols, m, c, output, outputCols, outputRows);
+    cudaDeviceSynchronize();
     
-//     int theZ = 0;
-//     for(int i=0; i<mWidth*convCols*convRows; i++){
-//         int id = i;
-//         int z = id / ((convCols)*(convRows));
-//         id -= (z * (convCols)*(convRows));
-//         int y = id / (convRows);
-//         int x = id % (convRows);
-//         c2[x][y][z] = c[id];
-//     }
+    int output_final[outputRows][outputCols];
     
-//     for(int i=0; i<mWidth*convCols*convRows; i++){
-//         printf("%d\n", c[i]);
-//     }
-    
-    for(int i=0; i<mWidth; i++){
-        for(int j=0; j<mCols; j++){
-            for(int k=0; k<mRows; k++){
-                printf("%d ", m2[k][j][i]);
-            }
+    val = 0;
+    for(int i=0; i<outputCols*outputRows; i++){
+        printf("%d ", output[i]);
+        val++;
+        if(val==outputRows){
+            val = 0;
             printf("\n");
         }
     }
-    
-    for(int i=0; i<mWidth; i++){
-        for(int j=0; j<convCols; j++){
-            for(int k=0; k<convRows; k++){
-                printf("%d ", c2[k][j][i]);
-            }
-            printf("\n");
-        }
-    }
-    
     
     
     return 0;
