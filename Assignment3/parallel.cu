@@ -125,44 +125,25 @@ int main(){
     
     int output_final[outputRows][outputCols];
     
+    filePointer = fopen("output.txt", "w");
+    
     val = 0;
     for(int i=0; i<outputCols*outputRows; i++){
         printf("%d ", output[i]);
+        fprintf(filePointer, "%d ", output[i]);
         val++;
         if(val==outputRows){
             val = 0;
             printf("\n");
+            fprintf(filePointer, "\n");
         }
     }
     
-    return 0;
-    
-    
-
-//     // start finding convolutions
-//     for(int i=0; i<outputCols; i++){
-//         for(int j=0; j<outputRows; j++){
-//             output[j][i] = computeConvolutionValue(j, i, mRows, mCols, mWidth, convRows, convCols,  m, c);
-//         }
-//     }
-
-//     for(int i=0; i<outputCols; i++){
-//         for(int j=0; j<outputRows; j++){
-//             printf("%d ", output[j][i]);
-//         }
-//         printf("\n");
-//     }
-
-//     filePointer = fopen("output.txt", "w");
-//     for(int i=0; i<outputCols; i++){
-//         for(int j=0; j<outputRows; j++){
-//             fprintf(filePointer, "%d ", output[j][i]);
-//         }
-//         fprintf(filePointer, "\n");
-//     }
-//     fclose(filePointer);
+    fclose(filePointer);
     
     cudaFree(m);
     cudaFree(c);
     cudaFree(output);
+    
+    return 0;
 }
