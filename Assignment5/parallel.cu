@@ -12,7 +12,6 @@ __global__ void parallelBubbleSorting(int* arr, int N, int maxElementsInArray){
     else{
         indexTillEnd = (threadIndex+1)*maxElementsInArray -1;
     }
-    printf("%d %d\n", indexToStartFrom, indexTillEnd);
     // Can have any simple sorting algorithm here...
     /* Iterative Bubble Sort Algorithm */
     
@@ -127,13 +126,6 @@ int main() {
     printf("%d\n", arr[i]);
   }
     
-  return 0;
-    
-    
-    
-    
-    
-//   mergeSort(arr, 0, N - 1);
   
   filePointer = fopen("output.txt", "w");
   for(int i=0; i<N; i++)
