@@ -16,10 +16,21 @@
 
 __global__ void computeConvolutionValue(int mRows, int mCols, int mWidth, int convRows, int convCols, int *m, int *c, int *output, int outputCols, int outputRows){
     int rowIndex=threadIdx.x, colIndex=blockIdx.x;
+    // we need the index of m[rowIndex][colIndex][0]
     int res = 0;
+    for(int i=0; i<mWidth; i++){
+        for(int j=0; j<convCols; j++){
+            for(int k=0; k<convRows; k++){
+                //m[rowIndex+k][colIndex+j][i]*c[k][j][i]
+                int indexOfC = i*(convCols*convRows) + (j*convRows) + k;
+                int indexOfM = i*(mRows*mCols) + ((colIndex+j)*mRows) + (rowIndex+k);
+                res += (c[indexOfC] * m[indexOfM]);
+            }
+        }
+    }
     
     int indexToFillInValue = rowIndex + (outputRows*colIndex);
-    output[indexToFillInValue] = 56;
+    output[indexToFillInValue] = res;
 }
 
 int main(){
@@ -123,7 +134,6 @@ int main(){
             printf("\n");
         }
     }
-    
     
     return 0;
     
