@@ -4,19 +4,25 @@ N = 100
 
 f = open("generate.txt", "w")
 
-# f.write(str(N)+"\n")
-# for i in range(N):
-#     v = str(random.uniform(-2, 2))
-#     v = v[0:5]
-#     f.write(v+"\n")
+K = 3
+L = 10
+M = 10
 
-# for i in range(N):
-#     v = str(random.uniform(-2, 1))
-#     v = v[0:5]
-#     f.write(v+"\n")
+for i in range(K):
+    for j in range(L):
+        for k in range(M):
+            v = str(random.randint(1, 5))
+            f.write(v+" ")
+        f.write("\n")
 
-for i in range(N):
-    v = str(random.randint(1, 100))
-    f.write(v+"\n")
+A = 3
+B = 3
+C = 3
+for i in range(A):
+    for j in range(B):
+        for k in range(C):
+            v = str(random.randint(1, 5))
+            f.write(v+" ")
+        f.write("\n")
 
 f.close()
