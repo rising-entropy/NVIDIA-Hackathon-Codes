@@ -12,11 +12,14 @@ __global__ void parallelBubbleSorting(int* arr, int N, int maxElementsInArray){
     else{
         indexTillEnd = (threadIndex+1)*maxElementsInArray -1;
     }
-    
+    printf("%d %d\n", indexToStartFrom, indexTillEnd);
     // Can have any simple sorting algorithm here...
     /* Iterative Bubble Sort Algorithm */
+    
+    // bubble sort is crossing its limit with other arrays
+    
     for(int i=indexToStartFrom; i<=indexTillEnd; i++){
-        for(int j=indexToStartFrom; j<=indexTillEnd; j++){
+        for(int j=indexToStartFrom; j<indexTillEnd; j++){
             if(arr[j]>arr[j+1]){
                 int temp = arr[j];
                 arr[j] = arr[j+1];
@@ -24,9 +27,7 @@ __global__ void parallelBubbleSorting(int* arr, int N, int maxElementsInArray){
             }
         }
     }
-    
     /* Iterative Bubble Sort Algorithm End */
-    
 }
 
 __global__ void parallelMerging(int* arr, int* arr2, int N, int maxElementsInArray){
@@ -40,9 +41,7 @@ __global__ void parallelMerging(int* arr, int* arr2, int N, int maxElementsInArr
         indexTillEnd = (threadIndex+1)*maxElementsInArray -1;
     }
     
-    printf("%d\n", indexTillEnd);
-    
-    
+//     printf("%d\n", indexTillEnd);
     
     
     int startIndexOfArray1=indexToStartFrom, startIndexOfArray2=((indexTillEnd+indexToStartFrom)/2)+1;
@@ -72,10 +71,6 @@ __global__ void parallelMerging(int* arr, int* arr2, int N, int maxElementsInArr
         currentIndexOfArray2++;
         indexTillWhereArrayIsFilled++;
     }
-    
-//     if(indexTillWhereArrayIsFilled-1 != indexTillEnd){
-//         printf("%d %d\n", 1, indexTillEnd);
-//     }
     
     for(int i=indexToStartFrom; i<=indexTillEnd; i++){
         arr[i] = arr2[i];
@@ -119,15 +114,15 @@ int main() {
   parallelBubbleSorting<<<1, threadCount>>>(arr, N, maxElementsInArray);
   cudaDeviceSynchronize();
     
-  parallelMerging<<<1, threadCount-1>>>(arr, arr2, N, 2*maxElementsInArray);
-  cudaDeviceSynchronize();
+//   parallelMerging<<<1, threadCount/2>>>(arr, arr2, N, 2*maxElementsInArray);
+//   cudaDeviceSynchronize();
     
-//   for(int i=0; i<N; i++){
-//       if(i%(2*maxElementsInArray) == 0){
-//           printf("\n");
-//       }
-//     printf("%d\n", arr[i]);
-//   }
+  for(int i=0; i<N; i++){
+      if(i%(2*maxElementsInArray) == 0){
+          printf("\n");
+      }
+    printf("%d\n", arr[i]);
+  }
     
   return 0;
     
