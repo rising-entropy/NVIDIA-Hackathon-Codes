@@ -113,9 +113,12 @@ int main() {
     
   parallelBubbleSorting<<<1, threadCount>>>(arr, N, maxElementsInArray);
   cudaDeviceSynchronize();
-    
-//   parallelMerging<<<1, threadCount/2>>>(arr, arr2, N, 2*maxElementsInArray);
-//   cudaDeviceSynchronize();
+  
+  for(int i=threadCount/2; i>=1; i/=2){
+      maxElementsInArray *= 2;
+      parallelMerging<<<1, i>>>(arr, arr2, N, maxElementsInArray);
+      cudaDeviceSynchronize();
+  }
     
   for(int i=0; i<N; i++){
       if(i%(2*maxElementsInArray) == 0){
