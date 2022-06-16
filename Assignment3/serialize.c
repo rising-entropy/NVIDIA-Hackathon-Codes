@@ -66,6 +66,13 @@ int main(){
         }
         printf("\n");
     }
-    
-    
+
+    filePointer = fopen("output.txt", "w");
+    for(int i=0; i<outputCols; i++){
+        for(int j=0; j<outputRows; j++){
+            fprintf(filePointer, "%d ", output[j][i]);
+        }
+        fprintf(filePointer, "\n");
+    }
+    fclose(filePointer);
 }
