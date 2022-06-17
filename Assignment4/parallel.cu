@@ -2,6 +2,20 @@
 #include<stdlib.h>
 #include<math.h>
 
+__global__ void computeSparseMultiplication(double *m_m, double *c_m, double *output_m, int N, int mCols, int mRows){
+  int i;
+  i = threadIdx.x;
+  if (i < N)
+  {
+      double res = 0;
+      for(int j=0; j<mCols; j++){
+          int mIndex = i*mCols + j;
+        res += m_m[mIndex]*c_m[j];
+      }
+      output_m[i] = res;
+  }
+}
+
 int main(){
     FILE *filePointer;
     char line[100] = {0};
@@ -23,7 +37,7 @@ int main(){
         }
         c[j] = 0;
     }
-
+    
     for(int i=0; i<numberOfNonZeroElements; i++){
         while(!feof(filePointer)){
             int x, y;
@@ -42,19 +56,33 @@ int main(){
             break;
         }
     }
-
-    for(int i=0; i<mRows; i++){
-        double res = 0;
-        for(int j=0; j<mCols; j++){
-            res += m[i][j]*c[j];
+    
+    double *m_m, *c_m, *output_m;
+    cudaMallocManaged(&m_m, sizeof(double)*mRows*mCols);
+    cudaMallocManaged(&c_m, sizeof(double)*mCols);
+    cudaMallocManaged(&output_m, sizeof(double)*mRows);
+    
+     for(int j=0; j<mCols; j++){
+        for(int k=0; k<mRows; k++){
+            //m_m has to be 1D
+            int id = j*mRows + k; 
+            m_m[id] = m[k][j];
         }
-        output[i] = res;
+        c_m[j] = c[j];
     }
-
-
+    
+    computeSparseMultiplication<<<1, mRows>>>(m_m, c_m, output_m, mRows, mCols, mRows);
+//     printf("%s", cudaGetErrorString(cudaGetLastError()));
+    cudaDeviceSynchronize();
+    
     filePointer = fopen("output.txt", "w");
     for(int i=0; i<mRows; i++){
-        fprintf(filePointer, "%0.6lf\n", output[i]);
+        fprintf(filePointer, "%0.6lf\n", output_m[i]);
     }
     fclose(filePointer);
+    
+    cudaFree(m_m);
+    cudaFree(c_m);
+    cudaFree(output_m);
+
 }
