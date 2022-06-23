@@ -72,12 +72,12 @@ int main(){
         }
     }
 
-//     for(int i=0; i<outputCols; i++){
-//         for(int j=0; j<outputRows; j++){
-//             printf("%d ", output[j][i]);
-//         }
-//         printf("\n");
-//     }
+    for(int i=0; i<outputCols; i++){
+        for(int j=0; j<outputRows; j++){
+            printf("%d ", output[j][i]);
+        }
+        printf("\n");
+    }
 
     filePointer = fopen("output.txt", "w");
     for(int i=0; i<outputCols; i++){
